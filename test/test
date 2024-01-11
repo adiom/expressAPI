@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+# Регистрация нового пользователя
+curl -s -X POST -H "Content-Type: application/json" -d '{"username": "canfly", "password": "timur"}' http://localhost:3000/register
+
+# Логин с зарегистрированным пользователем
+token=$(curl -s -X POST -H "Content-Type: application/json" -d '{"username": "canfly", "password": "timur"}' http://localhost:3000/login | jq -r .token)
+
+# Получение токена для пользователя canfly
+token=$(curl -s -X POST -H "Content-Type: application/json" -d '{"username": "canfly", "password": "timur"}' http://localhost:3000/login | jq -r .token)
+
+# Отладочный вывод токена
+echo "Token: $token"
+
+# Добавление или обновление товаров для пользователя canfly с использованием полученного токена
+curl -s -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" -d '{"products": [{"name": "Product1", "quantity": 10}, {"name": "Product2", "quantity": 5}]}' http://localhost:3000/products
+
+# Запрос на получение товаров для пользователя с использованием полученного токена
+curl -s -H "Authorization: Bearer $token" http://localhost:3000/products
